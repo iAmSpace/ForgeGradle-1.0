@@ -6,8 +6,8 @@ final class DevConstants
 {
     private DevConstants() { }
 
-    static final String INSTALLER_URL       = "http://files.minecraftforge.net/installer/forge-installer-{INSTALLER_VERSION}-shrunk.jar";
-    static final String LAUNCH4J_URL        = "http://files.minecraftforge.net/launch4j/launch4j-3.0.0-"+Constants.OPERATING_SYSTEM+"-"+Constants.SYSTEM_ARCH+".zip";
+    static final String INSTALLER_URL       = "https://files.minecraftforge.net/installer/forge-installer-{INSTALLER_VERSION}-shrunk.jar";
+    static final String LAUNCH4J_URL        = "https://files.minecraftforge.net/launch4j/launch4j-3.0.0-"+Constants.OPERATING_SYSTEM+"-"+Constants.SYSTEM_ARCH+".zip";
 
     // generated mapping related stuff
     static final String PACKAGED_SRG        = "{CACHE_DIR}/minecraft/net/minecraft/minecraft_srg/{MC_VERSION}/packaged-{MC_VERSION}.srg";

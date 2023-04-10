@@ -60,12 +60,15 @@ public class Constants
     public static final Closure<Boolean> CALL_FALSE = new Closure<Boolean>(null){ public Boolean call(Object o){ return false; }};
 
     // urls
-    public static final String MC_JAR_URL       = "http://s3.amazonaws.com/Minecraft.Download/versions/{MC_VERSION}/{MC_VERSION}.jar";
-    public static final String MC_SERVER_URL    = "http://s3.amazonaws.com/Minecraft.Download/versions/{MC_VERSION}/minecraft_server.{MC_VERSION}.jar";
-    public static final String MCP_URL          = "http://files.minecraftforge.net/fernflower_temporary.zip";
+    //public static final String MC_JAR_URL       = "http://s3.amazonaws.com/Minecraft.Download/versions/{MC_VERSION}/{MC_VERSION}.jar";
+    public static final String MC_JAR_URL       = "https://raw.githubusercontent.com/ZeroModsInc/Minecraft.Download/master/versions/{MC_VERSION}/{MC_VERSION}.jar";
+    //public static final String MC_SERVER_URL    = "http://s3.amazonaws.com/Minecraft.Download/versions/{MC_VERSION}/minecraft_server.{MC_VERSION}.jar";
+    public static final String MC_SERVER_URL    = "https://raw.githubusercontent.com/ZeroModsInc/Minecraft.Download/master/versions/{MC_VERSION}/minecraft_server.{MC_VERSION}.jar";
+    public static final String MCP_URL          = "https://files.minecraftforge.net/fernflower_temporary.zip";
     public static final String ASSETS_URL       = "http://resources.download.minecraft.net";
     public static final String LIBRARY_URL      = "https://libraries.minecraft.net/";
-    public static final String ASSETS_INDEX_URL = "https://s3.amazonaws.com/Minecraft.Download/indexes/{ASSET_INDEX}.json";
+    //public static final String ASSETS_INDEX_URL = "https://s3.amazonaws.com/Minecraft.Download/indexes/{ASSET_INDEX}.json";
+    public static final String ASSETS_INDEX_URL = "https://raw.githubusercontent.com/ZeroModsInc/Minecraft.Download/master/indexes/{ASSET_INDEX}.json";
 
     public static final String LOG              = ".gradle/gradle.log";
     public static final String ASSETS_INDEX     =  "legacy";
@@ -90,32 +93,27 @@ public class Constants
 
     // util
     public static final String NEWLINE = System.getProperty("line.separator");
-    private static final OutputStream NULL_OUT = new OutputStream()
-    {
-        public void write(int b) throws IOException{}
+    private static final OutputStream NULL_OUT = new OutputStream() {
+        public void write(int b) throws IOException {}
     };
 
 
     // helper methods
-    public static File cacheFile(Project project, String... otherFiles)
-    {
+    public static File cacheFile(Project project, String... otherFiles) {
         return Constants.file(project.getGradle().getGradleUserHomeDir(), otherFiles);
     }
 
-    public static File file(File file, String... otherFiles)
-    {
+    public static File file(File file, String... otherFiles) {
         String othersJoined = Joiner.on('/').join(otherFiles);
         return new File(file, othersJoined);
     }
 
-    public static File file(String... otherFiles)
-    {
+    public static File file(String... otherFiles) {
         String othersJoined = Joiner.on('/').join(otherFiles);
         return new File(othersJoined);
     }
 
-    public static List<String> getClassPath()
-    {
+    public static List<String> getClassPath() {
         URL[] urls = ((URLClassLoader) DevExtension.class.getClassLoader()).getURLs();
 
         ArrayList<String> list = new ArrayList<String>();
@@ -126,68 +124,58 @@ public class Constants
         return list;
     }
 
-    private static OperatingSystem getOs()
-    {
+    private static OperatingSystem getOs() {
         String name = StringUtils.lower(System.getProperty("os.name"));
-        if (name.contains("windows"))
-        {
+        if (name.contains("windows")) {
             return OperatingSystem.WINDOWS;
         }
-        else if (name.contains("mac") || name.contains("osx"))
-        {
+        else if (name.contains("mac") || name.contains("osx")) {
             return OperatingSystem.OSX;
         }
-        else if (name.contains("linux") || name.contains("unix"))
-        {
+        else if (name.contains("linux") || name.contains("unix")) {
             return OperatingSystem.LINUX;
         }
-        else
-        {
+        else {
             return null;
         }
     }
 
-    public static File getMinecraftDirectory()
-    {
+    public static File getMinecraftDirectory() {
         String userDir = System.getProperty("user.home");
 
-        switch (OPERATING_SYSTEM)
-        {
-            case LINUX:
+        switch (OPERATING_SYSTEM) {
+            case LINUX: {
                 return new File(userDir, ".minecraft/");
-            case WINDOWS:
+            }
+            case WINDOWS: {
                 String appData = System.getenv("APPDATA");
                 String folder = appData != null ? appData : userDir;
                 return new File(folder, ".minecraft/");
-            case OSX:
+            }
+            case OSX: {
                 return new File(userDir, "Library/Application Support/minecraft");
-            default:
+            }
+            default: {
                 return new File(userDir, "minecraft/");
+            }
         }
       }
 
-    private static SystemArch getArch()
-    {
+    private static SystemArch getArch() {
         String name = StringUtils.lower(System.getProperty("os.arch"));
-        if (name.contains("64"))
-        {
+        if (name.contains("64")) {
             return SystemArch.BIT_64;
-        }
-        else
-        {
+        } else {
             return SystemArch.BIT_32;
         }
     }
 
-    public static String hash(File file)
-    {
+    public static String hash(File file) {
         return hash(file, "MD5");
     }
 
-    public static String hash(File file, String function)
-    {
-        try
-        {
+    public static String hash(File file, String function) {
+        try {
 
             InputStream fis = new FileInputStream(file);
 
@@ -195,11 +183,9 @@ public class Constants
             MessageDigest complete = MessageDigest.getInstance(function);
             int numRead;
 
-            do
-            {
+            do {
                 numRead = fis.read(buffer);
-                if (numRead > 0)
-                {
+                if (numRead > 0) {
                     complete.update(buffer, 0, numRead);
                 }
             } while (numRead != -1);
@@ -209,37 +195,30 @@ public class Constants
 
             String result = "";
 
-            for (int i = 0; i < hash.length; i++)
-            {
+            for (int i = 0; i < hash.length; i++) {
                 result += Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1);
             }
             return result;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
 
         return null;
     }
 
-    public static String hash(String str)
-    {
-        try
-        {
+    public static String hash(String str) {
+        try {
             MessageDigest complete = MessageDigest.getInstance("MD5");
             byte[] hash = complete.digest(str.getBytes());
 
             String result = "";
 
-            for (int i = 0; i < hash.length; i++)
-            {
+            for (int i = 0; i < hash.length; i++) {
                 result += Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1);
             }
             return result;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -249,8 +228,7 @@ public class Constants
     /**
      * DON'T FORGET TO CLOSE
      */
-    public static OutputStream getNullStream()
-    {
+    public static OutputStream getNullStream() {
         return NULL_OUT;
     }
 }
